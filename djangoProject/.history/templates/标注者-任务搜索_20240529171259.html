@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="css/amazeui.min.css" />  -->
+    <!-- <link rel="stylesheet" href="css/admin.css" />  -->
+
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/project.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <script src="/static/layui/layui.js"></script>
+    <style>
+        .layui-form-label {
+            width: 100px;
+        }
+
+        .layui-table-view {
+            margin-left: 70px;
+        }
+
+        hr {
+            margin: 10px auto;
+        }
+
+        .form-control {
+            height: 30px;
+            font-size: small;
+        }
+
+        .btn {
+            padding: 3px 10px;
+        }
+
+        #type {
+            color: #999;
+        }
+
+        #type option {
+            color: #555;
+        }
+
+        .layui-btn {
+            padding: 0px 3px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 12px;
+        }
+    </style>
+    <title>任务选择</title>
+</head>
+
+<body>
+    <!-- 顶部 -->
+    <header>
+        <div id="Header">
+            <div id="head">
+                <div class="tit">机器学习数据标注平台</div>
+                <ul id="Navi">
+                    <li><a href="/index"><span>平台主页</span></a></li>
+                    <li><a href="/search_tasks"><span>任务选择</span></a></li>
+                    <li><a href="/annotator/mytask"><span>我的任务</span></a></li>
+                    <!--<li><a href="/annotator/pay"><span>薪酬管理</span></a></li>
+                    <li><a href="/complaint"><span>平台投诉</span></a></li>
+                    <li><a href="/talk"><span>学习交流</span></a></li>
+                    <li><a href="/annotator/person"><span>个人中心</span></a></li>-->
+                    <!-- <li><a href=""><span>产品管理信息</span></a></li> -->
+                </ul>
+                <div class="user-img"><img src="/static/images/ico_uer.gif" alt=""></div>
+                <div class="user" style="position: absolute;top: 0px;right: 1%;font-size: 20px;">
+                    <label for="menu" style="font-size: 14px;font-weight: normal;color: #000;">admin</label>
+                    <button type="button" class="user-set" onclick="showuserlist()" id="menu"
+                        style="display: inline-block;"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                    <div id="UserList">
+                        <a href="/homeBiaozhuzhe">个人中心</a>
+                        <a href="/index"
+                            onclick="document.cookie = 'user=;expires=Thu,01 Jan 1970 00:00:00 UTC;'">退出登录</a>
+                    </div>
+                </div>
+            </div>
+    </header>
+
+    <!-- 项目信息 -->
+    <div class="main" style="border-top: 1px solid #ccc;">
+        <div class="form-box" id="box" style="padding-top: 5px;">
+            <div class="container">
+                <h4 class="text-left text-primary">任务选择</h4>
+            </div>
+            <hr>
+            <form action="" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="" class="col-sm-1 control-label text-center col-sm-offset-1">任务类型</label>
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="text" value="TEXT" name="taskType">文本标注
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="image" value="IMAGE" name="taskType">图片标注
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="vedio" value="VEDIO" name="taskType">音频标注
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-sm-1 control-label text-center col-sm-offset-1">标注者等级要求</label>
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox1" value="1" name="taskRank"> 1
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox2" value="2" name="taskRank"> 2
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox3" value="3" name="taskRank"> 3
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox4" value="4" name="taskRank"> 4
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox5" value="5" name="taskRank"> 5
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskID" class="col-sm-1 control-label">任务ID</label>
+                    <div class="col-sm-3 col-sm-offset-1">
+                        <input type="text" placeholder="请输入任务ID" id='taskID' class="form-control" autocomplete="off">
+                    </div>
+                    <label for="taskTitle" class="col-sm-1 control-label">任务名称</label> 
+                    <div class="col-sm-3 col-sm-offset-1">
+                        <input type="text" placeholder="请输入任务名称（支持模糊匹配）" id='taskTitle' class="form-control" autocomplete="off">
+                    </div>
+                    <label for="name" class="col-sm-1 control-label">单位任务报酬（元）</label>
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox1" value="1" name="perTaskPaid"> 1-100
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox2" value="2" name="perTaskPaid"> 100-300
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox3" value="3" name="perTaskPaid"> 300-500
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox4" value="4" name="perTaskPaid"> 500-1000
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox5" value="5" name="perTaskPaid"> 大于1000
+                        </label>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-primary" id="clear">清除</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="button" class="btn btn-success" id="search">搜索</button>
+                        </div>
+                    </div>
+                </div>
+               
+            </form>
+            <div class="container" style="margin-top: 30px;">
+                <div>
+                    <table id="demo" lay-filter="test" class="layui-hide"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="toolbar1">
+        <div class="layui-btn-container">
+                <button type="button" class="layui-btn" lay-event="detail">查看项目详细</button>
+        </div>
+      </script>
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        // const xhr = new XMLHttpRequest();
+        // xhr.responseType = json;
+        // xhr.open('post','http://127.0.0.1:8000/data-server');
+        // xhr.send();
+        layui.use(['form', 'laydate', 'table', 'dropdown', 'jquery'], function () {
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var table = layui.table;
+            var laypage_set = layui.laypage;
+            var dropdown = layui.dropdown;
+            var $ = layui.$
+            laydate.render({
+                elem: '#publish_time',
+                range: false,
+                type: 'date'
+            });
+            laydate.render({
+                elem: '#end_time',
+                range: false,
+                type: 'date'
+            });
+            laydate.render({
+                elem: '#table_date'
+            })
+            dropdown.render({
+                elem: '#'
+            })
+            table.render({
+                elem: '#demo'
+                , height: 590
+                , width: 950
+                , url: '/all_project/' //数据接口
+                , method: 'post'
+                , page: true
+                , limit: 10
+                , limits: [10, 15, 20] //开启分页
+                , cols: [[ //表头
+                    { field: 'project_id', title: '任务id', width: 114, sort: true, fixed: 'left' }
+                    , { field: 'project_name', title: '任务', width: 83 }
+                    , { field: 'project_type', width: 60, title: '数据类型' }
+                    , { field: 'description', title: '任务描述', width: 316 }
+                    , { field: 'level', title: '任务等级', width: 86 }
+                    , { field: 'deadline', title: '截止时间', width: 98, sort: true }
+                    , { field: 'task_num', title: '数据数量', width: 76 }
+                    <!--                ,{field:'experience',width:200, title:'进度',templet:function(d)-->
+                    < !--{-->
+< !--                var n = (d.experience / 200 * 100).toFixed(2);-- >
+< !--                var style; -->
+< !--                if (n < 10) style = 'progress-bar-danger'; -->
+< !--                else if (n < 30) style = 'progress-bar-warning'; -->
+< !--                else if (n < 85) style = 'progress-bar-info'; -->
+< !--                else style = 'progress-bar-success'; -->
+< !--                return '<div class="progress" style="height:20px;width:100%;line-height:45px;margin:0"><div class="progress-bar ' + style + '" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:' + n + -->
+< !--                    '%;height:100%;color:#e6960c";>' + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + n + '%&nbsp;&nbsp;&nbsp;&nbsp;' + d.experience + '/' + 200 + '</div></div>'-- >
+< !--            }}-->
+            , { fixed: 'right', width: 110, title: '操作', toolbar: '#toolbar1', align: 'left' }
+            ]]
+            // ,className:'table-header'
+            , lineStyle: 'height:50px'
+            // ,skin: 'line' //行边框风格
+            , even: true //开启隔行背景
+            , size: 'sm' //小尺寸的表格
+            , loading: true
+            // ,data:data
+            })
+        // form.on('submit(demo-table-search)', function(data){
+        // var field = data.field; // 获得表单字段
+        // console.log(field);
+        // // 执行搜索重载
+        // table.reload('demo', {
+        // page: {
+        //     curr: 1 // 重新从第 1 页开始
+        // },
+        // where: field // 搜索的字段
+        // ,done:function(res,curr,count)
+        // {
+        // }
+        // });
+        // return false; // 阻止默认 form 跳转
+        table.on('tool(test)', function (obj) {
+            let data = obj.data;
+            let event = obj.event;
+            const xhr = new XMLHttpRequest();
+            switch (event) {
+                case 'detail':
+
+                    window.location.href = '/annotator/project_task?' + `id=${data.project_id}`;
+
+                    break;
+            }
+        })
+        var clear_btn = $('#clear');
+        var search_btn = $('#search');
+        var search_form = $('.form-horizontal');
+        clear_btn.click(function () {
+            $('.form-group input[type="text"]').val('');
+            $('.form-group select').val('');
+            $('.form-group label input[type="checkbox"]').prop('checked', false);
+            table.render({
+                elem: '#demo'
+                , height: 590
+                , width: 950
+                , url: '/all_project/' //数据接口
+                , method: 'post'
+                , page: true
+                , limit: 10
+                , limits: [10, 15, 20] //开启分页
+                , cols: [[ //表头
+                    { field: 'project_id', title: '任务id', width: 114, sort: true, fixed: 'left' }
+                    , { field: 'project_name', title: '项目名', width: 83 }
+                    , { field: 'project_type', width: 60, title: '数据类型' }
+                    , { field: 'description', title: '任务描述', width: 316 }
+                    , { field: 'level', title: '任务等级', width: 86 }
+                    , { field: 'deadline', title: '截止时间', width: 98, sort: true }
+                    , { field: 'task_num', title: '数据数量', width: 76 }
+                    , { fixed: 'right', width: 110, title: '操作', toolbar: '#toolbar1', align: 'left' }
+                ]]
+                // ,className:'table-header'
+                , lineStyle: 'height:50px'
+                // ,skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , size: 'sm' //小尺寸的表格
+                , loading: true
+                // ,data:data
+            })
+            // $.ajax({
+            // url:'http://localhost:8000/table-server',
+            // type:'post',
+            // dataType:'json',
+            // success:function(dat)
+            // {
+            //     console.log(dat);
+            //     table.render({
+            //         elem: '#demo'
+            //         ,height: 590
+            //         ,width:950
+            //         ,data:dat.data
+            //         ,page:true
+            //         ,limit:10
+            //         ,limits:[10,15,20] //开启分页
+            //         ,cols: [[ //表头
+            //         {field: 'id', title: '用户id', sort: true, fixed: 'left'}
+            //         ,{field: 'username', title: '用户名'}
+            //         ,{field: 'email', title: '邮箱', sort: true}
+            //         ,{field: 'sex', title: '性别'} 
+            //         ,{field: 'city', title: '城市'} 
+            //         // ,{field: 'sign', title: '签名'} 
+            //         ,{field: 'experience', title: '积分',sort:true} 
+            //         ,{field: 'joinTime', title: '加入时间'} 
+            //         ]]
+            //         // ,className:'table-header'
+            //         ,lineStyle:'height:50px'
+            //         // ,skin: 'line' //行边框风格
+            //         ,even: true //开启隔行背景
+            //         ,size: 'sm' //小尺寸的表格
+            //         });
+            // }})
+        })
+        search_btn.click(function () {
+            // let task_name = $('#name').val();
+            // let task_type = $('#type option:selected').text();
+            // let task_grade = $('#grade').val();
+            // let publish_time = $('#publish_time').val();
+            // let end_time = $('#end_time').val();
+
+            function getlis(name) {
+                var options = document.getElementsByName(name);
+                var str = [];
+                for (i = 0; i < options.length; i++) {
+                    if (options[i].checked) {
+                        str.push(options[i].value);
+                    }
+                }
+                return str;
+            }
+            var types = getlis('type');
+            var levels = getlis('level');
+            console.log(types);
+            console.log(levels);
+            var field = { 'id': $('#name').val(),
+< !--            'task_type': $('#type option:selected').text(), -->
+                'project_type': types,
+                    'project_levels': levels,
+< !--            'task_grade': $('#grade').val(), -->
+                'end_time': $('#end_time').val()
+        }
+            $.ajax({
+            url: '/some_project/',
+            type: 'post',
+            dataType: 'json',
+            data: field,
+            success: function (dat) {
+                console.log(dat);
+                table.render({
+                    elem: '#demo'
+                    , height: 590
+                    , width: 950
+                    , data: dat.data
+                    , page: true
+                    , limit: 10
+                    , limits: [10, 15, 20] //开启分页
+                    , cols: [[ //表头
+                        { field: 'project_id', title: '任务id', width: 114, sort: true, fixed: 'left' }
+                        , { field: 'project_name', title: '任务', width: 83 }
+                        , { field: 'project_type', width: 60, title: '数据类型' }
+                        , { field: 'description', title: '任务描述', width: 316 }
+                        , { field: 'level', title: '任务等级', width: 86 }
+                        , { field: 'deadline', title: '截止时间', width: 98, sort: true }
+                        , { field: 'task_num', title: '数据数量', width: 76 }
+                        , { fixed: 'right', width: 110, title: '操作', toolbar: '#toolbar1', align: 'left' }
+                    ]]
+                    // ,className:'table-header'
+                    , lineStyle: 'height:50px'
+                    // ,skin: 'line' //行边框风格
+                    , even: true //开启隔行背景
+                    , size: 'sm' //小尺寸的表格
+                    // ,data:data
+                });
+                console.log(dat.data);
+                layer.msg('为您找到' + dat.data.length + '条数据', { icon: 6 });
+            }
+        })
+        })
+    })
+        var user_list = $('#UserList');
+        var user = $('#menu');
+        var warning = $('.warning');
+        var wcontent = $('.warning_content');
+        function showuserlist() {
+            user_list.show();
+        }
+        function hiddenlist() {
+            user_list.hide();
+        }
+        document.onclick = function () {
+            hiddenlist();
+            if (user.find('span').hasClass('glyphicon glyphicon-chevron-up')) {
+                user.find('span').removeClass('glyphicon glyphicon-chevron-up');
+                user.find('span').toggleClass('glyphicon glyphicon-chevron-down');
+            }
+
+
+        }
+        user.click(function (event) {
+            var e = event || window.event;
+            if (e.cancelBubble) e.cancelBubble = true;
+            else e.stopPropagation();
+            if ($(this).find('span').hasClass('glyphicon glyphicon-chevron-up')) {
+                $(this).find('span').removeClass('glyphicon glyphicon-chevron-up');
+                $(this).find('span').toggleClass('glyphicon glyphicon-chevron-down');
+                hiddenlist();
+            }
+            else {
+                $(this).find('span').removeClass('glyphicon glyphicon-chevron-down');
+                $(this).find('span').toggleClass('glyphicon glyphicon-chevron-up');
+                showuserlist();
+            }
+        })
+    </script>
+</body>
+
+</html>

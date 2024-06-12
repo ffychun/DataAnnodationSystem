@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/project.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <script src="/static/layui/layui.js"></script>
+    <style>
+        h2 {
+            font-family: "KaiTi", "楷体", serif;
+        }
+        #basicInfoDialog h2 {
+            color: #000; /* Black color */
+        }
+        #passwordChangeDialog h2{
+            color: #000;
+        }
+        label {
+            color: #000; /* Black color */
+        }
+        /* 为表单内的文本指定颜色 */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select,
+        textarea {
+            color: #000; /* 黑色文本 */
+        }
+        /* 页面背景样式 */
+        body {
+            background-color: #333; /* 从原页面中获取的背景颜色 */
+            color: #fff; /* 文本颜色，可根据需要修改 */
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+        /* 头部样式 */
+        header {
+            color: #fff; /* 文本颜色，可根据需要修改 */
+            text-align: center; /* 根据需要调整 */
+            width: 0;
+            position: relative;
+            padding: 0 0; /* 添加内边距增加高度 */
+            box-sizing: border-box; /* 确保内边距不会增加总宽度 */
+        }
+        header .logout {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: 14px;
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #575757;
+            border-radius: 5px;
+        }
+        /* 左侧导航栏样式 */
+        .sidebar {
+            margin-top: 50px; /* 适当的间距 */
+            width: 150px;
+            background-color: #5a5a5a; /* 从原页面中获取的背景颜色 */
+            padding-top: 20px;
+            flex-shrink: 0;
+            height: 100%;
+        }
+        .sidebar a {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+        }
+        .sidebar a:hover {
+            background-color: #468847;
+        }
+        /* 主要内容区样式 */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 150px; /* 将左边距设为导航栏的宽度，使主要内容区避开导航栏 */
+            box-sizing: border-box; /* 确保内边距不会增加总宽度 */
+        }
+        .content-wrapper {
+            max-width: 600px; /* 最大宽度 */
+            width: 100%; /* 宽度为100% */
+        }
+        /* 对话框样式 */
+        .dialog {
+            display: none;
+            /* 根据需要设置对话框的样式 */
+        }
+        /* Centered form styling */
+        .centered-form {
+            position: absolute;
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 1100px;
+            width: 100%;
+        }
+        /* Form styling */
+        #basicInfoForm {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #basicInfoForm label {
+            font-weight: bold;
+        }
+        #basicInfoForm input[type="text"],
+        #basicInfoForm input[type="email"],
+        #basicInfoForm select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #basicInfoForm select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#000" fill-rule="evenodd" clip-rule="evenodd" d="M10 12.586L5.707 8.293a1 1 0 011.414-1.414L10 10.172l3.879-3.879a1 1 0 111.414 1.414L10 12.586z" /></svg>');
+            background-position: right 10px center;
+            background-repeat: no-repeat;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+        #basicInfoForm button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #basicInfoForm button:hover {
+            background-color: #0056b3;
+        }
+
+        #passwordChangeDialog {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #passwordChangeDialog label {
+            font-weight: bold;
+        }
+        #passwordChangeDialog select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #passwordChangeDialog select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#000" fill-rule="evenodd" clip-rule="evenodd" d="M10 12.586L5.707 8.293a1 1 0 011.414-1.414L10 10.172l3.879-3.879a1 1 0 111.414 1.414L10 12.586z" /></svg>');
+            background-position: right 10px center;
+            background-repeat: no-repeat;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+        #passwordChangeDialog button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #passwordChangeDialog button:hover {
+            background-color: #0056b3;
+        }
+        .dialog h2 {
+            color: #000; /* Black color */
+        }
+        #userLogoutDialog {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        #userLogoutDialog label {
+            font-weight: bold;
+        }
+        #userLogoutDialog select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #userLogoutDialog select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#000" fill-rule="evenodd" clip-rule="evenodd" d="M10 12.586L5.707 8.293a1 1 0 011.414-1.414L10 10.172l3.879-3.879a1 1 0 111.414 1.414L10 12.586z" /></svg>');
+            background-position: right 10px center;
+            background-repeat: no-repeat;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+        #userLogoutDialog button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #userLogoutDialog button:hover {
+            background-color: #0056b3;
+        }
+
+        .user-img img { width: 40px; height: 40px; border-radius: 50%; }
+
+        #dropdownMenu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            white-space: nowrap;
+        }
+
+        #dropdownMenu a {
+            display: block;
+            padding: 5px 3px;
+            color: black;
+            text-decoration: none;
+        }
+
+        #dropdownMenu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* CSS for the avatar dialog */
+        #avatarDialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid black;
+            padding: 40px; /* Increased padding for larger dialog */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999; /* Ensure dialog is on top of other elements */
+            width: 400px; /* Set a fixed width */
+        }
+
+        #avatarPreview {
+            text-align: center;
+            margin-bottom: 20px;
+            height: 200px; /* Fixed height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #avatarPreview img {
+            max-width: 100%; /* Image should not exceed the container width */
+            max-height: 100%; /* Image should not exceed the container height */
+            border-radius: 50%;
+        }
+
+        #avatarDialog .file-select, #avatarDialog button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block; /* Align buttons inline */
+            margin: 10px; /* Space between buttons */
+        }
+
+        #avatarDialog .file-select {
+            margin-left: auto; /* Align the label button to the left */
+        }
+
+        #avatarDialog button {
+            margin-right: auto; /* Align the button to the right */
+        }
+
+        #avatarInput {
+            display: none; /* Hide the file input */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="Header">
+            <div id="head">
+                <div class="tit">深度学习数据标注平台</div>
+                <div class="user-img" style="cursor: pointer;" onclick="showAvatarDialog()">
+                    <img src="" alt="User Avatar" id="userAvatar">
+                </div>
+
+                 <div id="avatarDialog">
+                    <div id="avatarPreview"></div>
+                    <label for="avatarInput" class="file-select" style="background-color: #2f4056; color: #fff; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block; margin-right: 10px;">选择图片</label>
+                    <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar()" style="display: none;">
+                    <button onclick="uploadAvatar()" style="background-color: #ffb800; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block;">确认更换</button>
+                </div>
+
+                <div class="user" style="position: absolute;top: 0px;right: 1%;font-size: 20px;">
+                    <label for="menu" style="font-size: 14px;font-weight: normal;color: #000;"><span id="username"></span></label>
+                    <button type="button" class="user-set" id="menu" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                    <div id="dropdownMenu" style="display: none; position: absolute; right: 0; background-color: white; border: 1px solid #ccc; padding: 10px;">
+                        <a href="/index" onclick="document.cookie = 'user=;expires=Thu, 01 Jan 1970 00:00:00 UTC;'">退出登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="sidebar">
+        <a href="#" id="basicInfoNav">基本信息</a>
+        <a href="#" id="passwordChangeNav">密码修改</a>
+        <a href="#" id="userLogoutNav">用户注销</a>
+        <a href="#" id="goback" onclick="goback()">返回</a>
+        <script>
+            function goback(){
+                window.history.back();
+            }
+        </script>
+    </div>
+    <div class="main-content">
+        <div class="content-wrapper">
+            <div class="centered-form">
+                <!-- 基本信息对话框 -->
+                <div class="dialog" id="basicInfoDialog">
+                    <!-- 在此处添加基本信息对话框的内容 -->
+                    <h2>基本信息</h2>
+                    <form id="basicInfoForm">
+                        <div class="form-group">
+                            <label for="nickname">昵称</label>
+                            <input type="text" id="nickname" name="nickname" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">电话</label>
+                            <input type="text" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">性别</label>
+                            <select id="gender" name="gender" required>
+
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="level">等级</label>
+                            <input type="text" id="level" name="level" readonly>
+                        </div>
+                        <button type="button" onclick="saveBasicInfo()">保存</button>
+                    </form>
+                </div>
+                <!-- 密码修改对话框 -->
+                <div class="dialog" id="passwordChangeDialog">
+                    <h2>密码修改</h2>
+                    <form id="passwordChangeForm">
+                        <div class="form-group">
+                            <label for="oldPassword">旧密码</label>
+                            <input type="password" id="oldPassword" name="oldPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">新密码</label>
+                            <input type="password" id="newPassword" name="newPassword" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">确认新密码</label>
+                            <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+                        </div>
+                        <button type="button" onclick="changePassword()">保存</button>
+                    </form>
+                </div>
+                <!-- 用户注销对话框 -->
+                <div class="dialog" id="userLogoutDialog">
+                    <h2>用户注销</h2>
+                    <p style="color: red;">您确定要注销吗？注销后所有信息将被清除。</p>
+                    <button type="button" onclick="logoutUser()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript 来控制导航栏点击事件显示对应的对话框
+        document.getElementById('basicInfoNav').addEventListener('click', function() {
+            showDialog('basicInfoDialog');
+        });
+        document.getElementById('passwordChangeNav').addEventListener('click', function() {
+            showDialog('passwordChangeDialog');
+        });
+        document.getElementById('userLogoutNav').addEventListener('click', function() {
+            showDialog('userLogoutDialog');
+        });
+
+        function showDialog(dialogId) {
+            // 隐藏所有对话框
+            var dialogs = document.getElementsByClassName('dialog');
+            for (var i = 0; i < dialogs.length; i++) {
+                dialogs[i].style.display = 'none';
+            }
+            // 显示选中的对话框
+            document.getElementById(dialogId).style.display = 'block';
+        }
+
+        function loadUserInfo() {
+            const userId = sessionStorage.getItem('userId');
+            fetch(`/personCenter/personDetail/?userId=${userId}`)
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    const user = data.user;
+                    document.getElementById('nickname').value = user.name || '';
+                    document.getElementById('phone').value = user.phone || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('gender').value = user.gender || '';
+                    document.getElementById('level').value = user.level || '';
+                })
+        }
+
+        function saveBasicInfo() {
+            const userId = sessionStorage.getItem('userId');
+            const formData = new FormData(document.getElementById('basicInfoForm'));
+            fetch(`/personCenter/personDetail/?userId=${userId}`, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('保存成功');
+                } else {
+                    alert('保存失败');
+                }
+            });
+        }
+
+        function changePassword() {
+            const userId = sessionStorage.getItem('userId');
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+            const formData = new FormData(document.getElementById('passwordChangeForm'));
+
+            console.log('旧密码：', oldPassword);
+            console.log('新密码：', newPassword);
+
+            // 检查新密码是否与确认新密码匹配
+            if (newPassword !== confirmNewPassword) {
+                alert('新密码两次输入不一致，请重新输入。');
+                return;
+            }
+
+            fetch(`/personCenter/changePassword/?userId=${userId}`, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('密码修改成功');
+                    document.getElementById('oldPassword').value = '';
+                    document.getElementById('newPassword').value = '';
+                    document.getElementById('confirmNewPassword').value = '';
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        function logoutUser() {
+            const userId = sessionStorage.getItem('userId');
+            fetch(`/personCenter/deleteUser/?userId=${userId}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('注销成功');
+                    window.location.href = '/index';
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showDialog('basicInfoDialog');
+            loadUserInfo();
+        });
+    </script>
+
+    <script>
+    // 从sessionStorage中获取用户ID
+    const userId = sessionStorage.getItem('userId');
+
+    // 发送请求到后端获取用户名
+    fetch(`/personCenter/getUserName/?userId=${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            const username = data.username;
+            // 更新页面上的用户名显示
+            document.getElementById('username').textContent = username;
+        })
+        .catch(error => console.error('Error:', error));
+
+    // 发送请求到后端获取头像路径
+        fetch(`/personCenter/getHeadSculpturePath/?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                let headSculpturePath = data.headSculpturePath;
+                if (headSculpturePath === 'static/images/ico_uer.gif') {
+                    document.getElementById('userAvatar').src = '/static/images/ico_uer.gif';
+                }else{
+                    document.getElementById('userAvatar').src = `/media/${headSculpturePath}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+    document.getElementById('menu').addEventListener('click', function() {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+            dropdownMenu.style.display = 'block';
+        } else {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+
+    // 移除旧的事件监听器
+    document.removeEventListener('click', avatarDialogClickListener);
+
+    // 添加新的事件监听器
+    document.addEventListener('click', avatarDialogClickListener);
+
+    // 新的事件监听器
+    function avatarDialogClickListener(event) {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        var menuButton = document.getElementById('menu');
+        var avatarDialog = document.getElementById('avatarDialog');
+        var userImg = document.querySelector('.user-img');
+
+        // 检查点击的目标是否是下拉菜单以外的区域
+        if (dropdownMenu.style.display === 'block' && !menuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+
+        // 检查点击的目标是否是头像框以外的区域
+        if (avatarDialog.style.display === 'block' && !avatarDialog.contains(event.target) && event.target !== userImg) {
+            avatarDialog.style.display = 'none';
+        }
+    }
+
+    document.querySelector('.user-img').addEventListener('click', function(event) {
+        showAvatarDialog();
+        event.stopPropagation();  // 阻止事件冒泡
+    });
+
+    function showAvatarDialog() {
+        const userAvatarSrc = document.getElementById('userAvatar').src;
+        document.getElementById('avatarPreview').innerHTML = `<img src="${userAvatarSrc}" alt="Avatar Preview">`;
+        document.getElementById('avatarDialog').style.display = 'block';
+    }
+
+    function previewAvatar() {
+        const preview = document.getElementById('avatarPreview');
+        const file = document.getElementById('avatarInput').files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.innerHTML = `<img src="${reader.result}" alt="Avatar Preview">`;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = "";
+        }
+    }
+
+    function uploadAvatar() {
+        const file = document.getElementById('avatarInput').files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('avatar', file);
+            formData.append('userId', userId);
+
+            fetch('/personCenter/uploadAvatar/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('userAvatar').src = URL.createObjectURL(file);
+                    document.getElementById('avatarDialog').style.display = 'none';
+                } else {
+                    alert('Failed to upload avatar');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        } else {
+            alert("Please select an image to upload.");
+        }
+    }
+</script>
+</body>
+</html>
+
+
+
+

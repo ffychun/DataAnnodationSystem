@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的项目</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/project.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f2f2f2;
+        }
+        .container {
+            width: 100%;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.4); ;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+        h4 {
+            margin-bottom: 20px;
+        }
+        .task-group {
+            margin-top: 20px;
+        }
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        .task-item p {
+            margin: 0;
+            flex: 1;
+            text-align: center;
+        }
+        .task-item button {
+            background-color: #337ab7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .task-item button:hover {
+            background-color: #286090;
+        }
+        /* 弹出框样式 */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            max-width: 600px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 20px;
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .popup-close {
+            cursor: pointer;
+            color: #999;
+            font-size: 20px;
+        }
+        .popup-close:hover {
+            color: #333;
+        }
+        .popup-body {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        /* 背景遮罩 */
+        .overlay {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .user-img img { width: 40px; height: 40px; border-radius: 50%; }
+
+        #dropdownMenu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            white-space: nowrap;
+        }
+
+        #dropdownMenu a {
+            display: block;
+            padding: 5px 3px;
+            color: black;
+            text-decoration: none;
+        }
+
+        #dropdownMenu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* CSS for the avatar dialog */
+        #avatarDialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid black;
+            padding: 40px; /* Increased padding for larger dialog */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999; /* Ensure dialog is on top of other elements */
+            width: 400px; /* Set a fixed width */
+        }
+
+        #avatarPreview {
+            text-align: center;
+            margin-bottom: 20px;
+            height: 200px; /* Fixed height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #avatarPreview img {
+            max-width: 100%; /* Image should not exceed the container width */
+            max-height: 100%; /* Image should not exceed the container height */
+            border-radius: 50%;
+        }
+
+        #avatarDialog .file-select, #avatarDialog button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block; /* Align buttons inline */
+            margin: 10px; /* Space between buttons */
+        }
+
+        #avatarDialog .file-select {
+            margin-left: auto; /* Align the label button to the left */
+        }
+
+        #avatarDialog button {
+            margin-right: auto; /* Align the button to the right */
+        }
+
+        #avatarInput {
+            display: none; /* Hide the file input */
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部 -->
+    <header>
+        <div id="Header">
+            <div id="head">
+                <div class="tit">机器学习数据标注平台</div>
+                <ul id="Navi">
+                    <li><a href="/homePublisher/" id="homePublisher"><span>平台主页</span></a></li>
+                    <li><a href="/task/publishTask/"><span>发布需求</span></a></li>
+                    <li><a href="/task/getMyTasksList/"><span>我的项目</span></a></li>
+                    <li><a href="/OrderManage/FabuzheOrderList/"><span>我的订单</span></a></li>
+                    <li><a href="/personCenter/personCenter/"><span>个人中心</span></a></li>
+                </ul>
+                <div class="user-img" style="cursor: pointer;" onclick="showAvatarDialog()">
+                    <img src="" alt="User Avatar" id="userAvatar">
+                </div>
+
+                 <div id="avatarDialog">
+                    <div id="avatarPreview"></div>
+                    <label for="avatarInput" class="file-select" style="background-color: #2f4056; color: #fff; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block; margin-right: 10px;">选择图片</label>
+                    <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar()" style="display: none;">
+                    <button onclick="uploadAvatar()" style="background-color: #ffb800; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block;">确认更换</button>
+                </div>
+
+                <div class="user" style="position: absolute;top: 0px;right: 1%;font-size: 20px;">
+                    <label for="menu" style="font-size: 14px;font-weight: normal;color: #000;"><span id="username"></span></label>
+                    <button type="button" class="user-set" id="menu" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                    <div id="dropdownMenu" style="display: none; position: absolute; right: 0; background-color: white; border: 1px solid #ccc; padding: 10px;">
+                        <a href="/index" onclick="document.cookie = 'user=;expires=Thu, 01 Jan 1970 00:00:00 UTC;'">退出登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main container">
+        <h4 class="text-left text-primary">我的项目</h4>
+        <hr>
+        <div id="taskListContainer" class="task-group">
+            <!-- 任务列表将会被填充在这里 -->
+        </div>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-header">
+            <h4>任务详情</h4>
+            <span class="popup-close" onclick="closePopup()">&times;</span>
+        </div>
+        <div class="popup-body" id="popupBody">
+            <!-- 任务详情将会被填充在这里 -->
+        </div>
+    </div>
+    <div id="overlay" class="overlay"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 页面加载完成后，发送 AJAX 请求获取用户发布的所有任务列表
+            $.ajax({
+                url: '{% url "get_tasks_list" %}',
+                type: 'GET',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        displayTasks(response.tasks);
+                    } else {
+                        alert('获取任务列表失败，请重试。');
+                    }
+                },
+                error: function() {
+                    alert('发生错误，请稍后重试。');
+                }
+            });
+
+            // 显示任务列表
+            function displayTasks(tasks) {
+                var taskListHTML = '';
+                tasks.forEach(function(task) {
+                    // 创建任务条目的 HTML
+                    taskListHTML += '<div class="task-item">';
+                    taskListHTML += '<p>任务状态：' + task.task_status + '</p>';
+                    taskListHTML += '<p>任务名称：' + task.taskTitle + '</p>';
+                    taskListHTML += '<p>任务编号：' + task.taskId + '</p>';
+                    taskListHTML += '<p>任务单价：' + task.perTaskPaid + '</p>';
+                    taskListHTML += '<p>任务数量：' + task.taskNumber + '</p>';
+                    taskListHTML += '<p>创建时间：' + task.createTime + '</p>';
+                    taskListHTML += '<button onclick="viewTaskDetails(' + task.taskId + ')">详情</button>';
+                    taskListHTML += '<button onclick="editTask(' + task.taskId + ')">更改</button>';
+                    taskListHTML += '</div>';
+                });
+                // 将任务列表添加到容器中
+                $('#taskListContainer').html(taskListHTML);
+            }
+
+            // 查看任务详情
+            window.viewTaskDetails = function(taskId) { // 将函数挂载到全局作用域
+                console.log('查看任务详情：', taskId); // 调试信息
+                $.ajax({
+                    url: '{% url "get_task_details" %}',
+                    type: 'GET',
+                    data: {taskId: taskId},
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // 填充任务详细信息到弹出框主体中
+                            $('#popupBody').html('<p>任务名称：' + response.task.taskTitle + '</p>' +
+                                                 '<p>任务编号：' + response.task.taskId + '</p>' +
+                                                 '<p>任务类型：' + response.task.taskType + '</p>' +
+                                                 '<p>任务状态：' + response.task.task_status + '</p>' +
+                                                 '<p>任务单价：' + response.task.perTaskPaid + '</p>' +
+                                                 '<p>任务数量：' + response.task.taskNumber + '</p>' +
+                                                 '<p>任务存量：' + response.task.taskRemainingNumber + '</p>' +
+                                                 '<p>任务等级：' + response.task.taskRank + '</p>' +
+                                                 '<p>创建时间：' + response.task.createTime + '</p>' +
+                                                 '<p>任务简介：' + response.task.taskDescription + '</p>'
+                                                );
+                            // 显示弹出框和遮罩层
+                            $('#popup').show();
+                            $('#overlay').show();
+                        } else {
+                            alert('获取任务详情失败，请重试。');
+                        }
+                    },
+                    error: function() {
+                        alert('发生错误，请稍后重试。');
+                    }
+                });
+            }
+
+            // 编辑任务
+            window.editTask = function(taskId) { // 将函数挂载到全局作用域
+                // 根据任务编号跳转到相应的任务编辑页面
+                window.location.href = '/task/modifyTask/?taskId=' + taskId;
+            }
+        });
+
+        // 关闭弹出框
+        window.closePopup = function() {
+            $('#popup').hide();
+            $('#overlay').hide();
+        }
+    </script>
+
+    <script>
+        // 从sessionStorage中获取用户ID
+        const userId = sessionStorage.getItem('userId');
+
+        // 发送请求到后端获取用户名
+        fetch(`/personCenter/getUserName/?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                const username = data.username;
+                // 更新页面上的用户名显示
+                document.getElementById('username').textContent = username;
+            })
+            .catch(error => console.error('Error:', error));
+
+        // 发送请求到后端获取头像路径
+        fetch(`/personCenter/getHeadSculpturePath/?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                let headSculpturePath = data.headSculpturePath;
+                if (headSculpturePath === 'static/images/ico_uer.gif') {
+                    document.getElementById('userAvatar').src = '/static/images/ico_uer.gif';
+                }else{
+                    document.getElementById('userAvatar').src = `/media/${headSculpturePath}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+        document.getElementById('menu').addEventListener('click', function() {
+            var dropdownMenu = document.getElementById('dropdownMenu');
+            if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+                dropdownMenu.style.display = 'block';
+            } else {
+                dropdownMenu.style.display = 'none';
+            }
+        });
+
+        // 移除旧的事件监听器
+        document.removeEventListener('click', avatarDialogClickListener);
+
+        // 添加新的事件监听器
+        document.addEventListener('click', avatarDialogClickListener);
+
+        // 新的事件监听器
+        function avatarDialogClickListener(event) {
+            var dropdownMenu = document.getElementById('dropdownMenu');
+            var menuButton = document.getElementById('menu');
+            var avatarDialog = document.getElementById('avatarDialog');
+            var userImg = document.querySelector('.user-img');
+
+            // 检查点击的目标是否是下拉菜单以外的区域
+            if (dropdownMenu.style.display === 'block' && !menuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.style.display = 'none';
+            }
+
+            // 检查点击的目标是否是头像框以外的区域
+            if (avatarDialog.style.display === 'block' && !avatarDialog.contains(event.target) && event.target !== userImg) {
+                avatarDialog.style.display = 'none';
+            }
+        }
+
+        document.querySelector('.user-img').addEventListener('click', function(event) {
+            showAvatarDialog();
+            event.stopPropagation();  // 阻止事件冒泡
+        });
+
+        function showAvatarDialog() {
+            const userAvatarSrc = document.getElementById('userAvatar').src;
+            document.getElementById('avatarPreview').innerHTML = `<img src="${userAvatarSrc}" alt="Avatar Preview">`;
+            document.getElementById('avatarDialog').style.display = 'block';
+        }
+
+        function previewAvatar() {
+            const preview = document.getElementById('avatarPreview');
+            const file = document.getElementById('avatarInput').files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.innerHTML = `<img src="${reader.result}" alt="Avatar Preview">`;
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = "";
+            }
+        }
+
+        function uploadAvatar() {
+            const file = document.getElementById('avatarInput').files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('avatar', file);
+                formData.append('userId', userId);
+
+                fetch('/personCenter/uploadAvatar/', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('userAvatar').src = URL.createObjectURL(file);
+                        document.getElementById('avatarDialog').style.display = 'none';
+                    } else {
+                        alert('Failed to upload avatar');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                alert("Please select an image to upload.");
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

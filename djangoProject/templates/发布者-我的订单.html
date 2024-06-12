@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/project.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <script src="/static/layui/layui.js"></script>
+    <title>我的订单</title>
+    <style>
+        body {
+            background-color: #f2f2f2;
+        }
+        .container {
+            width: 100%;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+        }
+        h4 {
+            margin-bottom: 20px;
+        }
+        .order-group {
+            margin-top: 20px;
+        }
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .order-item p {
+            margin: 0;
+            flex: 1;
+            text-align: center;
+        }
+        .order-item button {
+            background-color: #337ab7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .order-item button:hover {
+            background-color: #286090;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            max-width: 600px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 20px;
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .popup-close {
+            cursor: pointer;
+            color: #999;
+            font-size: 20px;
+        }
+        .popup-close:hover {
+            color: #333;
+        }
+        .popup-body {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        /* 样式上传按钮 */
+        #uploadForm button {
+            background-color: #337ab7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #uploadForm button:hover {
+            background-color: #286090;
+        }
+
+        #uploadForm .form-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-img img { width: 40px; height: 40px; border-radius: 50%; }
+
+        #dropdownMenu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            white-space: nowrap;
+        }
+
+        #dropdownMenu a {
+            display: block;
+            padding: 5px 3px;
+            color: black;
+            text-decoration: none;
+        }
+
+        #dropdownMenu a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* CSS for the avatar dialog */
+        #avatarDialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 1px solid black;
+            padding: 40px; /* Increased padding for larger dialog */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999; /* Ensure dialog is on top of other elements */
+            width: 400px; /* Set a fixed width */
+        }
+
+        #avatarPreview {
+            text-align: center;
+            margin-bottom: 20px;
+            height: 200px; /* Fixed height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #avatarPreview img {
+            max-width: 100%; /* Image should not exceed the container width */
+            max-height: 100%; /* Image should not exceed the container height */
+            border-radius: 50%;
+        }
+
+        #avatarDialog .file-select, #avatarDialog button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block; /* Align buttons inline */
+            margin: 10px; /* Space between buttons */
+        }
+
+        #avatarDialog .file-select {
+            margin-left: auto; /* Align the label button to the left */
+        }
+
+        #avatarDialog button {
+            margin-right: auto; /* Align the button to the right */
+        }
+
+        #avatarInput {
+            display: none; /* Hide the file input */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="Header">
+            <div id="head">
+                <div class="tit">机器学习数据标注平台 | 发布者端</div>
+                <ul id="Navi">
+                    <li><a href="/homePublisher/" id="homePublisher"><span>平台主页</span></a></li>
+                    <li><a href="/task/publishTask/"><span>发布需求</span></a></li>
+                    <li><a href="/task/getMyTasksList/"><span>我的项目</span></a></li>
+                    <li><a href="/OrderManage/FabuzheOrderList/"><span>我的订单</span></a></li>
+                    <li><a href="/personCenter/personCenter/"><span>个人中心</span></a></li>
+                </ul>
+                <div class="user-img" style="cursor: pointer;" onclick="showAvatarDialog()">
+                    <img src="" alt="User Avatar" id="userAvatar">
+                </div>
+
+                 <div id="avatarDialog">
+                    <div id="avatarPreview"></div>
+                    <label for="avatarInput" class="file-select" style="background-color: #2f4056; color: #fff; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block; margin-right: 10px;">选择图片</label>
+                    <input type="file" id="avatarInput" accept="image/*" onchange="previewAvatar()" style="display: none;">
+                    <button onclick="uploadAvatar()" style="background-color: #ffb800; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block;">确认更换</button>
+                </div>
+
+                <div class="user" style="position: absolute;top: 0px;right: 1%;font-size: 20px;">
+                    <label for="menu" style="font-size: 14px;font-weight: normal;color: #000;"><span id="username"></span></label>
+                    <button type="button" class="user-set" id="menu" style="display: inline-block;">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                    <div id="dropdownMenu" style="display: none; position: absolute; right: 0; background-color: white; border: 1px solid #ccc; padding: 10px;">
+                        <a href="/index" onclick="document.cookie = 'user=;expires=Thu, 01 Jan 1970 00:00:00 UTC;'">退出登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="main container">
+        <h4 class="text-left text-primary">我的订单</h4>
+        <hr>
+        <div id="orderListContainer" class="order-group">
+
+        </div>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-header">
+            <h4>订单详情</h4>
+            <span class="popup-close" onclick="closePopup()">&times;</span>
+        </div>
+        <div class="popup-body" id="popupBody">
+
+        </div>
+    </div>
+
+    <div id="uploadPopup" class="popup">
+    <div class="popup-header">
+        <h4>上传文件</h4>
+        <span class="popup-close" onclick="closeUploadPopup()">&times;</span>
+    </div>
+    <div class="popup-body">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="dataset_file">
+                <button type="submit">确认上传</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <div id="overlay" class="overlay"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const userId = sessionStorage.getItem('userId');
+
+            $.ajax({
+                url: '{% url "findAllOrder" %}',
+                type: 'GET',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        displayOrders(response.orders);
+                    } else {
+                        alert('获取订单列表失败，请重试。');
+                    }
+                },
+                error: function() {
+                    alert('发生错误，请稍后重试。');
+                }
+            });
+
+            function displayOrders(orders) {
+                var orderListContainer = $('#orderListContainer');
+                orderListContainer.empty();
+
+                orders.forEach(function(order) {
+                    var orderHTML = '<div class="order-item">';
+                    orderHTML += '<p>订单编号：' + order.order_id + '</p>';
+                    orderHTML += '<p>任务编号：' + order.task_id + '</p>';
+                    orderHTML += '<p>订单金额：' + order.total_price + '</p>';
+
+                    if (order.pay_method==0 && order.result_path){
+                        var payUrl = '{% url 'pay' 0 %}'.replace('0', order.order_id);
+                        orderHTML += '<form method="get" action="' +payUrl+ '">'
+                                       + '<button type="submit">支付</button>'
+                                       + '</form>';}
+                    else if(order.pay_method==1){
+                        orderHTML += '<p>支付方式：支付宝</p>';
+                    }
+                    else if(order.pay_method==2){
+                        orderHTML += '<p>支付方式：微信</p>';
+                    }
+                    else if(!order.result_path){
+                        orderHTML += '<button onclick="alert(\'等待标注者上传数据集\')">支付</button>';
+                    }
+
+                    orderHTML += '<button onclick="viewOrderDetails(' + order.order_id + ')">订单详情</button>';
+                   if (order.result_path) {
+                        var downloadInitialDataUrl = '{% url 'download_result_data' 0 %}'.replace('0', order.order_id);
+                        orderHTML += '<form method="get" action="' + downloadInitialDataUrl + '">'
+                                       + '<button type="submit" style="background-color: pink; color: white; border: none; padding:8px 16px; border-radius: 4px; cursor: pointer;">下载结果数据</button>'
+                                       + '</form>';
+                    } else {
+                        orderHTML += '<button onclick="alert(\'等待标注者上传数据集\')">下载结果数据</button>';
+                    }
+                    orderHTML += '<button onclick="openUploadPopup(' + order.order_id + ')">上传原始数据</button>';
+
+                    orderHTML += '</div>';
+                    orderListContainer.append(orderHTML);
+            });}
+
+            window.viewOrderDetails = function(orderId) {
+                $.ajax({
+                    url: '/OrderManage/order_detail/' + orderId + '/',
+                    type: 'GET',
+                    data: {order_id: orderId},
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // 填充任务详细信息到弹出框主体中
+                            var popupContent = '<p>订单编号：' + response.orderDetails.order_id + '</p>' +
+                                                '<p>任务名称：' + response.orderDetails.task_id + '</p>' +
+                                               '<p>任务发布者：' + response.orderDetails.task_creator+ '</p>' +
+                                               '<p>任务描述：' + response.orderDetails.task_description + '</p>'+
+                                               '<p>订单状态：' + response.orderDetails.order_state + '</p>' +
+                                               '<p>订单报酬：' + response.orderDetails.total_price + '</p>' +
+                                               '<p>支付状态：' + response.orderDetails.payment_status + '</p>'+
+                                               '<p>创建时间：' + response.orderDetails.create_time + '</p>';
+
+                            if (response.orderDetails.submit_time) {
+                                popupContent += '<p>提交时间：' + response.orderDetails.submit_time + '</p>';
+                            }
+                            else{
+                                popupContent += '<p>提交时间：' + "结果数据集未提交" + '</p>';
+                            }
+                            $('#popupBody').html(popupContent);
+                            $('#popup').show();
+                            $('#overlay').show();
+                        } else {
+                            alert('获取订单详情失败，请重试。');
+                        }
+                    }
+                });
+
+            }
+
+            window.closePopup = function() {
+                $('#popup').hide();
+                $('#overlay').hide();
+            }
+
+            window.openUploadPopup = function(orderId) {
+                $('#uploadForm').data('orderId', orderId);
+                $('#uploadPopup').show();
+                $('#overlay').show();
+            }
+
+            window.closeUploadPopup = function() {
+                $('#uploadPopup').hide();
+                $('#overlay').hide();
+            }
+
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
+                var orderId = $(this).data('orderId');
+                var formData = new FormData(this);
+
+                 $.ajax({
+                    url: '{% url "upload_file" 0 "dataset_file" %}'.replace('0', orderId),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        alert(response.message);
+                        if (response.status === 'success') {
+                            closeUploadPopup();
+                            location.reload();
+                        }
+                    },
+                    error: function(response) {
+                        alert(response.message);
+                    }
+                });
+            });
+        })
+    </script>
+
+    <script>
+    // 从sessionStorage中获取用户ID
+    const userId = sessionStorage.getItem('userId');
+
+    // 发送请求到后端获取用户名
+    fetch(`/personCenter/getUserName/?userId=${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            const username = data.username;
+            // 更新页面上的用户名显示
+            document.getElementById('username').textContent = username;
+        })
+        .catch(error => console.error('Error:', error));
+
+    // 发送请求到后端获取头像路径
+        fetch(`/personCenter/getHeadSculpturePath/?userId=${userId}`)
+            .then(response => response.json())
+            .then(data => {
+                let headSculpturePath = data.headSculpturePath;
+                if (headSculpturePath === 'static/images/ico_uer.gif') {
+                    document.getElementById('userAvatar').src = '/static/images/ico_uer.gif';
+                }else{
+                    document.getElementById('userAvatar').src = `/media/${headSculpturePath}`;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+    document.getElementById('menu').addEventListener('click', function() {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+            dropdownMenu.style.display = 'block';
+        } else {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+
+    // 移除旧的事件监听器
+    document.removeEventListener('click', avatarDialogClickListener);
+
+    // 添加新的事件监听器
+    document.addEventListener('click', avatarDialogClickListener);
+
+    // 新的事件监听器
+    function avatarDialogClickListener(event) {
+        var dropdownMenu = document.getElementById('dropdownMenu');
+        var menuButton = document.getElementById('menu');
+        var avatarDialog = document.getElementById('avatarDialog');
+        var userImg = document.querySelector('.user-img');
+
+        // 检查点击的目标是否是下拉菜单以外的区域
+        if (dropdownMenu.style.display === 'block' && !menuButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+
+        // 检查点击的目标是否是头像框以外的区域
+        if (avatarDialog.style.display === 'block' && !avatarDialog.contains(event.target) && event.target !== userImg) {
+            avatarDialog.style.display = 'none';
+        }
+    }
+
+    document.querySelector('.user-img').addEventListener('click', function(event) {
+        showAvatarDialog();
+        event.stopPropagation();  // 阻止事件冒泡
+    });
+
+    function showAvatarDialog() {
+        const userAvatarSrc = document.getElementById('userAvatar').src;
+        document.getElementById('avatarPreview').innerHTML = `<img src="${userAvatarSrc}" alt="Avatar Preview">`;
+        document.getElementById('avatarDialog').style.display = 'block';
+    }
+
+    function previewAvatar() {
+        const preview = document.getElementById('avatarPreview');
+        const file = document.getElementById('avatarInput').files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.innerHTML = `<img src="${reader.result}" alt="Avatar Preview">`;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = "";
+        }
+    }
+
+    function uploadAvatar() {
+        const file = document.getElementById('avatarInput').files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('avatar', file);
+            formData.append('userId', userId);
+
+            fetch('/personCenter/uploadAvatar/', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('userAvatar').src = URL.createObjectURL(file);
+                    document.getElementById('avatarDialog').style.display = 'none';
+                } else {
+                    alert('Failed to upload avatar');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        } else {
+            alert("Please select an image to upload.");
+        }
+    }
+</script>
+</body>
+</html>

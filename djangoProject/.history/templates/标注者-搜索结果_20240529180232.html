@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索结果</title>
+    <link rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        <h2 class="text-center">搜索结果</h2>
+        <div id="task-list">
+            {% for task in tasks %}
+            <div class="task">
+                <h3>{{ task.taskTitle }}</h3>
+                <p>任务ID: {{ task.taskId }}</p>
+                <p>任务报酬: {{ task.perTaskPaid }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src=""></script>
+</body>
+
+</html>

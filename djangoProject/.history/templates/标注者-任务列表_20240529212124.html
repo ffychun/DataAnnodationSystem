@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务列表</title>
+</head>
+
+<body>
+    <h1>任务列表</h1>
+
+    {% for task in tasks %}
+    <div>
+        <h2><a href="{% url 'task_detail' task_id=task.taskId %}">{{ task.taskTitle }}</a></h2>
+        <p>任务类型: {{ task.get_taskType_display }}</p>
+    </div>
+    {% empty %}
+    <p>暂无任务</p>
+    {% endfor %}
+
+    <!-- 分页链接 -->
+    {% if tasks.has_previous %}
+    <a href="?page=1">首页</a>
+    <a href="?page={{ tasks.previous_page_number }}">上一页</a>
+    {% endif %}
+
+    <span>页码: {{ tasks.number }} / {{ tasks.paginator.num_pages }}</span>
+
+    {% if tasks.has_next %}
+    <a href="?page={{ tasks.next_page_number }}">下一页</a>
+    <a href="?page={{ tasks.paginator.num_pages }}">尾页</a>
+    {% endif %}
+</body>
+
+</html>

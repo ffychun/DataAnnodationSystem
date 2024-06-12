@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务筛选</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <form id="taskFilterForm">
+            <div class="form-group row">
+                <label for="taskType" class="col-sm-2 col-form-label text-center">任务类型</label>
+                <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="taskType0" value="0" name="taskType">
+                        <label class="form-check-label" for="taskType0">文本</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="taskType1" value="1" name="taskType">
+                        <label class="form-check-label" for="taskType1">图像</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="taskType2" value="2" name="taskType">
+                        <label class="form-check-label" for="taskType2">音频</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="taskRank" class="col-sm-2 col-form-label text-center">标注者等级要求</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="taskRank" name="taskRank">
+                        <option value="">所有等级</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="taskID" class="col-sm-2 col-form-label">任务ID</label>
+                <div class="col-sm-4">
+                    <input type="text" placeholder="请输入任务ID" id='taskID' class="form-control" autocomplete="off">
+                </div>
+                <label for="taskTitle" class="col-sm-2 col-form-label">任务名称</label>
+                <div class="col-sm-4">
+                    <input type="text" placeholder="请输入任务名称（支持模糊匹配）" id='taskTitle' class="form-control"
+                        autocomplete="off">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="perTaskPaid" class="col-sm-2 col-form-label text-center">单位任务报酬（元）</label>
+                <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="perTaskPaid1" value="1" name="perTaskPaid">
+                        <label class="form-check-label" for="perTaskPaid1">1-100</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="perTaskPaid2" value="2" name="perTaskPaid">
+                        <label class="form-check-label" for="perTaskPaid2">100-300</label>
+                    </div>
+                    <div class="

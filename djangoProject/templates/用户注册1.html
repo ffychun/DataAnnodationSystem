@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>注册</title>
+    <link type="text/css" rel="stylesheet" href="/static/css/zhuce.css" />
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <style>
+        .theimg {
+            max-width: 90%;
+            height: 350px;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding-top: 10%;
+        }
+        .popup {
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0px 0px 10px 2px #000;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .popup_title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .popup_content {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .popup_btn button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .popup_btn button:hover {
+            background-color: #0056b3;
+        }
+        .warning {
+            display: none;
+            color: red;
+        }
+    </style>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        var height=$(document).height();
+        $('.main').css('height',height);
+        changeImg();
+    });
+
+    function showPopup(message){
+        var overlay = document.getElementById("overlay");
+        var popupContent = document.querySelector(".popup_content");
+        popupContent.textContent = message;
+        overlay.style.display = "flex";
+        setTimeout(function() {
+            overlay.style.display = "none";
+            window.location.href = "/index";  // 跳转到登录页面
+        }, 3000);
+    }
+
+    function hidePopup(){
+        var overlay = document.getElementById("overlay");
+        overlay.style.display = "none";
+    }
+
+    function changeImg() {
+        var arrays = new Array(
+            '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+            'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z'
+        );
+        code = ''; //重新初始化验证码
+        for(let i = 0; i < 4; i++) {
+            var r = parseInt(Math.random() * arrays.length);
+            code += arrays[r];
+        }
+        document.querySelector('.yzm-img').innerHTML = code;
+    }
+
+    function check() {
+        var email = $('.txtemail').val();
+        var yzm = $('.txtyzm').val();
+        var warning = $('.warning');
+        var warning_title = $('.warning_title');
+        var warning_content = $('.warning_content');
+
+        if (!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)))
+        {
+            warning_title.text('邮箱格式错误');
+            warning_content.text('请输入正确的注册邮箱！');
+            warning.show();
+            setTimeout(function(){warning.hide()},3000);
+            return false;
+        }
+        else if (!(/^[0-9a-zA-Z]{4}$/.test(yzm) && yzm.toUpperCase() === code.toUpperCase()))
+        {
+            $('.txtyzm').val('');
+            warning_title.text('验证码错误');
+            warning_content.text('验证码错误,请重试！');
+            warning.show();
+            setTimeout(function(){warning.hide()},3000);
+            changeImg();
+            return false;
+        }
+        else if ($('.xieyi input').prop('checked') !== true)
+        {
+            warning_title.text('未确认协议');
+            warning_content.text('请仔细阅读并遵守《数据标注服务协议》');
+            warning.show();
+            setTimeout(function(){warning.hide()},3000);
+            return false;
+        }
+        else {
+            $.ajax({
+                url: '/register1/',
+                type: 'POST',
+                data: $('form').serialize(),
+                success: function(response) {
+                    if (response === 'exists') {
+                        showPopup('该邮箱已注册，请直接登录。');
+                    } else {
+                        window.location.href = '/register2/';
+                    }
+                }
+            });
+            return false;  // 阻止默认表单提交
+        }
+    }
+    </script>
+</head>
+
+<body>
+<div class="main">
+  <div class="main0">
+     <div class="main_left">
+        <h1 class="wel">欢迎来到数据标注平台!</h1>
+        <img src="/static/images/平台1.jpg" class="theimg"/>
+     </div>
+     <div class="main_right">
+        <div class="main_r_up">
+            <img src="/static/images/user.png" />
+            <div class="pp">用户注册</div>
+        </div>
+        <div class="sub"><p>已经注册？<a href="/index"><span class="blue">请登录</span></a></p></div>
+        <form onsubmit="return check()">
+            <div class="txt">
+                <span style="letter-spacing:5px;">电子邮箱:</span>
+                <input name="email" type="text" class="txtemail" placeholder="请输入邮箱" value="{{email}}"/>
+            </div>
+            <div class="txt">
+                <span style=" float:left;letter-spacing:10px;">验证码: </span>
+                <input name="yzm" type="text" class="txtyzm" placeholder="请输入验证码"/>
+                <span class="yzm-img"></span>
+            </div>
+            <div class="yzm"><button id="yzm-change" type="button" onclick="changeImg()">看不清，换一张</button></div>
+            <div class="xieyi">
+                <input name="" type="checkbox" value="" checked="checked"/>
+                我已经阅读并遵守<button type="button" class="xieyi_btn" onclick="showPopup('《数据标注服务协议》')">
+                <span class="blue" style="cursor:pointer">《数据标注服务协议》</span></button>
+            </div>
+            <div class="xiayibu"><input type="submit" value="下一步 >" class="submit"></div>
+        </form>
+        <div class="warning">
+            <p class="warning_title"></p>
+            <p class="warning_content"></p>
+        </div>
+     </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer0">
+     <div class="footer_l">使用条款 | 隐私保护</div>
+     <div class="footer_r">© 2024</div>
+  </div>
+</div>
+<div id="overlay">
+    <div class="popup">
+        <p class="popup_title">提示</p>
+        <p class="popup_content"></p>
+        <div class="popup_btn">
+            <button class="cancelBtn" type="button" onclick="hidePopup()">取消</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

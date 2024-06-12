@@ -1,0 +1,148 @@
+*{margin: 0px;padding: 0px;}
+ul li{list-style: none;}
+/* body{ background-image: linear-gradient(19deg,#21D4F4 0%,#B721FF 100%) } */
+body{background-image: url(/static/images/bg9.jpg);}
+#Header{background-color:#FFF;position: fixed;width: 100%;z-index: 800;}
+#Header::after{display: block;content: '';clear: both;}
+
+#head{width:100% ;height: 50px;position: relative;}
+#head::after{display: block;content: '';clear: both;}
+#head .tit{display: block;float: left;height: 100%;line-height: 50px;text-align: center;background-color: black;color:#FFF;width: 20%;margin-right: 5%;}
+#head #Navi{height:50px;overflow:hidden;width:65%}
+#head #Navi::after{display: block;content: '';clear: both;}
+#head #Navi li{width:10%;float:left;list-style: none;padding-right: 20px;}
+/* #head #Navi li{width:10%;float:left;list-style: none;border-right: 1px solid #ccc;padding-right: 20px;} */
+#head #Navi li a{display:block;width:100%;text-align:center;color:black;text-decoration:none;font-size:14px;background-color:white;}
+#head #Navi li a:hover{background-color:#1f9acb;color: black;}
+#head .msg{float:right;position:absolute;top:8px;right: 125px;}
+#head .msg i{font-size: 22px;}
+#head #Navi li .active{background-color:  hsl(196, 91%, 50%);}
+/* #Navi li a img{display:block;margin:0px auto;} */
+#head #Navi li a span{display:block;text-align:center;text-align: center;line-height: 50px;}
+#head .user-img{float:right;position:absolute;top:10px;right: 90px;}
+#head .user{float: right;position:absolute;top: 4px;right: 2%;padding-top:12px;color: #ccc;}
+#head .user .user-set{font-size: 14px;text-align:  center; display:block;color:#333;border-style: none;background-color: white;}
+
+#head .user a{font-size:14px;text-align: center; display:block;color:#333;text-decoration:none;}
+.user #UserList{position:absolute;display:none;background-color:#FFF;width:60px;text-align: center;z-index: 999;border: 1px solid #ccc;}
+.user #UserList a{background-image:none;color:black;margin: 6px auto;}
+.user #UserList a:hover{background-color:#0bb4f2;}
+
+.main{position: absolute;top:50px;width:100%;margin:0 auto;border-top: 1px solid #ccc;border-top: 1px solid #ccc;}
+.main .form-box{position:relative; background-color: #FFF;width: 80%;text-align: center;margin:0 auto;font-size: 14px;color: #333;padding-top: 30px;position: relative;}
+.form-box::after{content: '';display: block;clear: both;}
+
+.form-box .side{height: 100%;width: 12%;}
+.side::after{content: '';display: block;clear: both;}
+.side h3{margin-bottom: 2em;}
+.side dt{border-bottom: 1px solid #ccc;text-align: center;height: 50px;line-height: 50px;display: block;}
+.side dt a{text-decoration: none;color:black;height: 50px;line-height: 50px;width: 100%;display: block;}
+.side .active{background-color:  hsl(196, 91%, 50%);}
+.side dt:hover{background-color: #1f9acb;}
+
+/* .form-box .account{height: 100%;width: 90%;position: absolute;top: 5%;left: 10%;}
+.form-box .account h3{margin: 0 2em;text-align: left;margin-bottom: 2em}
+.role_inf .roles{height:25px;position: relative;} 
+.form-box ul li,.roles{margin:10px 0;list-style: none;position: relative;}
+
+.form-box ul li .row{position: relative;height: 30px;} 
+.row::after{display: block;content: '';clear: both;}
+.form-box .account-inf ul li .row div{display: inline-block;margin-right: 20px;}
+.row .attr_name{position:absolute;left: 10em;height: 100%;line-height:30px ;}
+.row .edit{position:absolute;left: 50%;height: 100%;line-height:25px ;}
+.edit:hover{color:  hsl(196, 91%, 50%);cursor:context-menu} */
+/* .row .attr_value{position: absolute;left: 20%;top: 4px;width: 25%;} */
+/* .row .value{width: auto;height: 30px; position: absolute;left: 20%;top: 4px;margin-left: 1em;}
+.row input[type='text']{position: absolute;left: 20%;top: 4px;width: 25%;} 
+.row img{position:absolute;left: 30%;top:4px;}
+.c1{position: absolute;left: 25%;top:4px;}
+.c2{position: absolute;left: 35%;top: 4px;}
+
+.save{position: relative;margin: 0 auto;width: 40%;height: 30px;margin-top: 20px;}
+.save::after{content: '';display: block;clear: both;}
+.save .zhuye{background-color: #ccc;border: #ccc 1px solid;height: 30px;width: 80px;line-height: 30px;margin: 0 auto;display: inline-block;margin-right: 20px;}
+.zhuye a{text-decoration: none;color:#FFF;}
+.save .save_change{display:inline-block;}
+.save_change button{height: 30px;width: 80px;line-height: 30px;border-style: none;background-color: #0bb4f2;color: #FFF;} */
+/* 钱包 */
+/* .form-box .wallet{height: 100%;width: 90%;position: absolute;top: 5%;left: 10%;}
+.wallet h3{margin: 0 2em;text-align: left;margin-bottom: 2em}
+.wallet div{width: 100%;height: 20%;position: relative;}
+.wallet #wallet-amount::after{display: block;content: '';clear: both;}
+.wallet #card::after{display: block;content: '';clear: both;}
+.wallet .bank{float: left;margin-left: 35px;text-align: center;padding-top: 8px;} */
+/* .wallet input{height: 30px;line-height: 30px;position: absolute;left: 6%;top: 42%;width: 215px;border: none;text-align: center;outline: none;color: transparent;text-shadow: 0 0 0 #000;} */
+/* .wallet input{height: 30px;line-height: 30px;position: absolute;left: 9%;top: 42%;width: 215px;border: none;text-align: center;outline: none;}
+.wallet img{position: absolute;left: 30%;top:42%}
+.m1{position: absolute;left: 35%;top:42%;height: 30px;line-height: 30px;width: 10%;cursor: pointer;}
+.m2{position: absolute;left: 50%;top:42%;height: 30px;line-height: 30px;width: 10%;background-color: #21D4F4;border: none;border: 1px solid #ccc;border-radius: 2px;cursor:pointer;}
+.m2:hover{background-color: #1f9acb;}
+#bank{position: absolute;left: 35px;top:44%;} */
+
+#overplay{width: 100%;height: 100%;background-color: rgba(0, 0, 0, 0.5);position:fixed;left: 0;top: 0;display: none;}
+.pop_main {
+    background-color: #ffffff;
+    max-width: 390px;
+    min-width: 200px;
+    height: 410px;
+    border-radius: 5px;
+    margin: 145px auto;
+    text-align: center;
+	position: relative;
+}
+.pop_main .pop_title{border-bottom: 1px #ccc solid;height: 50px;}
+.pop_title h2{height: 60px;width: 100%;text-align: center;line-height:50px ;}
+.pop_content{height: 320px;width: 100%;position: relative;}
+.pop_content .row1{height: 30px;width: 100%;position: relative;text-align: left;margin: 20px auto;padding-left: 25px;}
+.pop_content .row1 input{left: 30%;width: 45%;}
+.pop_content .row1 div{width: 25%;height: 30px;line-height: 30px;display: inline-block;}
+.pop_content .btn{width: 100%;height: 40px;margin-top: 50px;position: relative;;}
+.btn button{height: 30px;line-height: 30px;width: 25%;}
+.btn .confirm_add{position: absolute; left: 20%;background-color: #21D4F4;border: none;border: 1px solid #ccc;border-radius: 2px;cursor: pointer;}
+.confirm:hover{background-color: #1f9acb;}
+.btn .cancel_add{position: absolute; left: 50%;cursor: pointer;}
+.pop_content .warning{position: absolute;border: #ccc 1px solid;left: 10%;top:65%;display: none;height: 30px;width: 80%;}
+.pop_content .warning img{float: left;}
+.pop_content .warning_content{height: 30px;line-height: 30px;float: left;}
+
+.form-box .account_safe{height: 100%;width: 90%;position: absolute;top: 5%;left: 10%;}
+.account_safe h3{margin: 0 2em;text-align: left;margin-bottom: 2em}
+.account_safe div{height: 50%;}
+
+.account_safe div .row2{width: 100%;height: 30px;margin: 20px auto;}
+.row2 div{display: inline-block;width: 15%;}
+.row2 input{width: 25%;}
+.account_safe div .btn1{position: relative;width: 100%;margin-top: 25px;height: 35px;}
+.btn1 button{height: 35px;line-height: 35px;width: 50px;}
+.btn1 .confirm{position: absolute; left: 50%;background-color: #21D4F4;border: 1px solid #ccc;border-radius: 2px;cursor: pointer;}
+.confirm:hover{background-color: #1f9acb;}
+.btn1 .cancel{position: absolute; left: 60%;cursor: pointer;}
+
+.form-box .guide{height: 40px;position: absolute;top: 43%;left:45%; width: 30%;border: 1px solid #ccc;display: none;}
+.form-box .guide{height: 40px;position: absolute;top: 92%;left:45%; width: 30%;border: 1px solid #ccc;display: none;}
+.guide img{float: left;}
+.guide .guide_content{height: 40px;line-height: 40px;}
+
+.form-box .warning1{height: 32px;position: absolute;top: 10%;left:30%; width: 30%;border: 1px solid #ccc;display: none;} 
+.warning1 .warning_content1{height: 30px;line-height: 30px;}
+.warning-img1{float: left;height: 30px;}
+/* 账户管理 */
+.form-box .account_manage{height: 100%;width: 90%;position: absolute;top: 5%;left: 10%;}
+.form-box .account_manage ul li{margin:10px 0;list-style: none;position: relative;}
+ 
+.account_manage #current_account{width: 100%;height: 40%}
+#current_account::after{display: block;content: '';clear: both;}
+.form-box ul li .row3{position: relative;height: 30px;} 
+.form-box .account_manage h3{margin: 0 2em;text-align: left;margin-bottom: 3em}
+.form-box .account_manage ul li .row3 div{display: inline-block;margin-right: 20px;}
+.row3::after{display: block;content: '';clear: both;}
+.row3 .attr_name{position:absolute;left: 10em;height: 100%;line-height:30px ;}
+.row3 .value{width: auto;height: 30px; position: absolute;left: 20%;top: 4px;margin-left: 1em;}
+.row3 img{position:absolute;left: 30%;top:4px;}
+
+.account_manage #login_out{width: 100%;height:auto ;}
+#login_out::after{display: block;content: '';clear: both;}
+#login_out .btn2{position: relative;width: 100%;margin-top: 30px;height: 35px;}
+.btn2 button{height: 35px;line-height: 35px;width: 70px;}
+.btn2 .remake{position: absolute; left: 15%;cursor: pointer;}
+.btn2 .out{position: absolute; left: 25%;cursor: pointer;}

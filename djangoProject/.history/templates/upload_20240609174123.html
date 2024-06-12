@@ -1,0 +1,39 @@
+<!-- upload.html -->
+{% extends 'base.html' %}
+{% block content %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传</title>
+</head>
+
+<body>
+    <div class="text-center">
+        <br><br><h1>文件上传</h1>
+        <form method="post" enctype="multipart/form-data"><br>
+            {% csrf_token %}
+            请上传txt格式文件<br><br>
+            <input type="file" name="file" class="text-center">
+            <button class="btn btn-info" type="submit">上传</button>
+            <!-- <a href="/AnnotationMethod/" class="btn btn-success">返回</a> -->
+        </form>
+    </div>
+</body>
+
+</html>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><Br><footer class="bd-footer text-muted">
+    <div class="container-fluid p-3 p-md-5">
+        <ul class="bd-footer-links">
+            <li><a href="https://github.com/EINDICE">GitHub</a></li>
+            <li><a href="/AnnotationMethod/help/">About</a></li>
+        </ul>
+        <p>Designed by <a href="https://github.com/EINDICE">Zhao</a> @Beihang Univ. Maintained by our team members.</p>
+        <p><a href="https://mit-license.org/" target="_blank" rel="license noopener">MITrigger</a> license, <a
+                href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY
+                3.0</a>.</p>
+    </div>
+</footer>
+{% endblock content %}

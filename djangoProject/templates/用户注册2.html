@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>注册</title>
+    <link type="text/css" rel="stylesheet" href="/static/css/zhuce.css" />
+    <!-- <script type="text/javascript" src="/static/js/zhuce.js"></script> -->
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        var height=$(document).height();
+        $('.main').css('height',height);
+    })
+    </script>
+    <style>
+        .theimg {
+            max-width: 90%;
+            height: 350px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="main">
+  <div class="main0">
+     <div class="main_left">
+        <img src="/static/images/平台1.jpg" class="theimg"/>
+        <!-- <img src="images/zhuce-image-2.png" class="secimg"/>
+        <img src="images/zhuce-image-1.png" class="firimg"/> -->
+     </div>
+     <div class="main_right">
+        <div class="main_r_up">
+            <img src="/static/images/user.png" />
+            <div class="pp">注册</div>
+        </div>
+        <div class="sub"><p>已经注册？<a href="/index"><span class="blue">请登录</span></a></p></div>
+        <form action="/register2/" method="post" enctype="multipart/form-data">
+        <div class="txt txt0">
+            <span style="letter-spacing:3px;" >用户昵称:</span>
+            <input name="username" type="text" class="username" placeholder="请输入用户昵称"/>
+        </div>
+
+        <div class="txt txt0" style="height: 30px;">
+            <span style="letter-spacing: 3px;">注册角色:</span>
+            <label style="width: 100px; font-size: 14px;">
+                <input name="user-role" type="radio" value="publisher" style="vertical-align: middle;" checked/>&nbsp;项目发布者
+            </label>
+            <label style="width: 100px; font-size: 14px;">
+                <input name="user-role" type="radio" value="annotator" style="vertical-align: middle;"/>&nbsp;数据标注员
+            </label>
+        </div>
+
+        <div class="txt txt0" id="resume-upload-container" style="display: none;">
+            <span style="letter-spacing: 3px;">简历上传:</span>
+            <input type="file" id="resume" name="resume">
+        </div>
+
+        <div class="txt txt0">
+            <span style="letter-spacing:3px;">登录密码:</span>
+            <input name="pwd" type="password" class="pwd" placeholder="请输入密码"/>
+        </div>
+        <div class="txt txt0">
+            <span style="letter-spacing:3px;">重复密码:</span>
+            <input name="pwd1" type="password" class="pwd1" placeholder="请再次输入密码"/>
+        </div>
+        <div class="txt txt0">
+            <a href="/register1/"><span style=" float:left;color:#31acfb"><返回上一步</span></a>
+            <!-- <a href="zhuceSucc.html"><div class="zhucebtn">确认注册</div></a> -->
+            <button class="zhucebtn" type="submit" onclick="check()">确认注册</button>
+        </div>
+        <div style="display: none;">
+            <input type="text" name="email" id="email" value="{{email}}">
+        </div>
+        </form>
+        <div class="warning">
+            <p class="warning_title"></p>
+            <p class="warning_content"></p>
+        </div>
+     </div>
+  </div>
+</div>
+<div class="footer">
+  <div class="footer0">
+     <div class="footer_l">使用条款 | 隐私保护</div>
+     <div class="footer_r">© 2024</div>
+  </div> 
+</div>
+<script>
+$(document).ready(function () {
+    var height=$(document).height();
+    $('.main').css('height',height);
+
+    var username = $('.username');
+    var pwd = $('.pwd');
+    var pwd1 = $('.pwd1');
+    var warning = $('.warning');
+    var warning_title = $('.warning_title');
+    var warning_content = $('.warning_content');
+
+    function showWarning(title, content) {
+        warning_title.text(title);
+        warning_content.text(content);
+        warning.show();
+        setTimeout(function() {
+            warning.hide();
+        }, 3000);
+    }
+
+    function showSuccess(title, content) {
+        warning_title.css('color', 'green');
+        warning_title.text(title);
+        warning_content.text(content);
+        warning.show();
+    }
+
+    $('form').on('submit', function(event) {
+        event.preventDefault(); // 阻止默认表单提交
+
+        if (username.val() === '') {
+            showWarning('用户昵称错误', '用户昵称不能为空！');
+        } else if (!(/^[0-9a-zA-Z\_]{8}$/.test(pwd.val()))) {
+            showWarning('密码格式错误', '请输入密码或检查密码格式,密码应为八位！');
+            pwd.val('');
+            pwd1.val('');
+        } else if (pwd.val() != pwd1.val()) {
+            showWarning('密码设置错误', '前后两次密码不一致,请重新设置！');
+            pwd.val('');
+            pwd1.val('');
+        } else {
+            $.ajax({
+                url: '/register2/',
+                type: 'POST',
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.status === 'success') {
+                        showSuccess('用户注册完成', '注册成功,即将为您跳转到登录页面...');
+                        setTimeout(function() {
+                            window.location.href = "{% url 'index' %}";
+                        }, 3000);
+                    }
+                }
+            });
+        }
+    });
+});
+
+document.querySelectorAll('input[name="user-role"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        if (this.value === 'annotator') {
+            document.getElementById('resume-upload-container').style.display = 'block'; // 显示简历上传容器
+        } else {
+            document.getElementById('resume-upload-container').style.display = 'none'; // 隐藏简历上传容器
+        }
+    });
+});
+</script>
+
+</body>
+</html>

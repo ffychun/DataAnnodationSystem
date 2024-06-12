@@ -1,0 +1,69 @@
+<!-- tag_lines.html -->
+{% extends 'base.html' %}
+{% block content %}
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tag Lines</title>
+</head>
+
+<body>
+    <div class="text-center">
+        <br><br><h1>文本情绪倾向标注</h1><br>
+        <p>Line {{ line_number }}: {{ line_text }}</p><br>
+        <form id="tagForm" method="post" action="{% url 'save_tag' %}">
+            {% csrf_token %}
+            <input type="hidden" name="line_number" value="{{ line_number }}">
+            <input type="hidden" name="line_text" value="{{ line_text }}">
+            <select name="tag">
+                <option value="1">积极</option>
+                <option value="-1">消极</option>
+                <option value="0">中立</option>
+                <option value="-2">这是一句废话</option>
+            </select>
+            <button type="submit" class="btn btn-info">Save and Next</button>
+            <br><br>
+            <a href="/AnnotationMethod/upload/" class="btn btn-success">返回上传文档页面</a>
+        </form>
+    </div>
+    <script src="static\js\tagging.js">
+        document.getElementById('tagForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.status === 'completed') {
+                        alert('All lines have been tagged!');
+                    } else if (data.next_line_number) {
+                        // 跳转到下一句
+                        window.location.href = `/AnnotationMethod/tag_lines/${data.next_line_number}/`;
+                    } else {
+                        alert('Failed to get next line number.');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
+
+<br><br><br><br><br><br><br><br><footer class="bd-footer text-muted">
+    <div class="container-fluid p-3 p-md-5">
+        <ul class="bd-footer-links">
+            <li><a href="https://github.com/EINDICE">GitHub</a></li>
+            <li><a href="/AnnotationMethod/help/">About</a></li>
+        </ul>
+        <p>Designed by <a href="https://github.com/EINDICE">Zhao</a> @Beihang Univ. Maintained by our team members.</p>
+        <p><a href="https://mit-license.org/" target="_blank" rel="license noopener">MITrigger</a> license, <a
+                href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license noopener">CC BY
+                3.0</a>.</p>
+    </div>
+</footer>
+{% endblock content %}

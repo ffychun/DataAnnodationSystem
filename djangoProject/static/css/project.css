@@ -1,0 +1,37 @@
+*{margin: 0px;padding: 0px;}
+ul li{list-style: none;}
+/* body{ background-image: linear-gradient(19deg,#21D4F4 0%,#B721FF 100%) } */
+body{background-image: url(/static/images/bg9.jpg);opacity: 0.82;}
+#Header{background-color:#FFF;position: fixed;width: 100%;z-index: 800;}
+#Header::after{display: block;content: '';clear: both;}
+
+#head{width:100% ;height: 50px;position: relative;}
+#head::after{display: block;content: '';clear: both;}
+#head .tit{display: block;float: left;height: 100%;line-height: 50px;text-align: center;background-color: black;color:#FFF;width: 20%;margin-right: 5%;}
+#head #Navi{height:50px;overflow:hidden;width:65%}
+#head #Navi::after{display: block;content: '';clear: both;}
+#head #Navi li{width:10%;float:left;list-style: none;padding-right: 20px;}
+/* #head #Navi li{width:10%;float:left;list-style: none;border-right: 1px solid #ccc;padding-right: 20px;} */
+#head #Navi li a{display:block;width:100%;text-align:center;color:black;text-decoration:none;font-size:14px;background-color:white;}
+#head #Navi li a:hover{background-color:#1f9acb;color: black;}
+/* #Navi li a img{display:block;margin:0px auto;} */
+#head #Navi li a span{display:block;text-align: center;line-height: 50px;}
+#head #Navi li .active{background-color:  hsl(196, 91%, 50%);}
+#head .msg{float:right;position:absolute;top:8px;right: 125px;}
+#head .msg i{font-size: 22px;}
+#head .user-img{float:right;position:absolute;top:10px;right: 90px;}
+#head .user{float: right;position:absolute;top: 4px;right: 2%;padding-top:12px;color: #ccc;}
+#head .user .user-set{font-size: 14px;text-align:  center; display:block;color:#333;border-style: none;background-color: white;}
+
+#head .user a{font-size:14px;text-align: center; display:block;color:#333;text-decoration:none;}
+.user #UserList{position:absolute;display:none;background-color:#FFF;width:60px;text-align: center;z-index: 999;border: 1px solid #ccc;}
+.user #UserList a{background-image:none;color:black;margin: 6px auto;}
+.user #UserList a:hover{background-color:#0bb4f2;}
+
+/* .main{background-image: linear-gradient(19deg,#21D4F4 0%,#B721FF 100%);position: relative;margin:0 auto;overflow: hidden;} */
+.main{position: absolute;margin:0 auto;overflow: hidden;top: 50px;width: 100%;}
+.main .form-box{height:100%;position:relative; width: 80%;text-align: center;margin:0 auto;font-size: 14px;color: #333;}
+.form-box::after{content: '';display: block;clear: both;}
+.form-box .warning{height: 32px;position: absolute;top: 22%;left:30%; width: 30%;border: 1px solid #ccc;display: none;background-color: #FFF;} 
+.warning .warning_content{height: 30px;line-height: 30px;}
+.warning-img{float: left;height: 30px;}

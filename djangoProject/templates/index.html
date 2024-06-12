@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <link type="text/css" rel="stylesheet" href="/static/css/login.css" />
+    <script src="/static/js/jquery-3.4.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var height = $(document).height();
+            $('.main').css('height', height);
+        })
+    </script>
+    <style>
+        .theimg {
+            max-width: 90%;
+            height: 350px;
+        }
+    </style>
+</head>
+
+<body onload="changeImg()">
+<div class="main">
+  <div class="main0">
+     <div class="main_left">
+        <h1 class="wel">欢迎来到数据标注平台!</h1>
+        <img src="/static/images/平台1.jpg" class="theimg"/>
+     </div>
+     <div class="main_right">
+        <div class="main_r_up">
+            <img src="/static/images/user.png" />
+            <div class="pp">用户登录</div>
+        </div>
+        <div class="sub"><p>还没有账号？<a href="/register1/"><span class="blue">立即注册</span></a></p></div>
+        <form action="/login/" method="post" class="login_form">
+        <div class="txt">
+            <span style="letter-spacing:14px;">邮箱:</span>
+            <input name='user' id="username" type="text" class="txtphone" placeholder="请输入注册邮箱"/>
+        </div>
+
+        <div class="txt">
+            <span style="letter-spacing:3px;">登录密码:</span>
+            <input id="pwd" name='pwd' type="password" class="txtphone" placeholder="请输入登录密码"/>
+        </div>
+        <div class="txt">
+            <span style="letter-spacing:7px;">验证码:</span>
+            <input type="text" class="txtyzm" placeholder="请输入页面验证码"/>
+            <span class="yzm-img"></span>
+        </div>
+        <div class="yzm"><button id="yzm-change" type="button" onclick="changeImg()">看不清，换一张</button></div>
+        <div class="xieyi">
+            <input name="" type="checkbox" value="" checked="checked"/>
+            记住我 <a href="/password1"><span class="blue" style="padding-left:130px; cursor:pointer">忘记密码?</span></a>
+        </div>
+        <div>
+           <button type="button" class="xiayibu" onclick="check()">登录</button>
+        </div>
+        </form>
+        <div class="warning">
+            <p class="warning_title"></p>
+            <p class="warning_content"></p>
+        </div>
+     </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer0">
+     <div class="footer_l">使用条款 | 隐私保护</div>
+     <div class="footer_r">© 2024</div>
+  </div>
+</div>
+<script>
+    var code;
+    var s = $('span.yzm-img');
+    var user = $('#username');
+    var pwd = $('#pwd');
+    var yzm = $('.txtyzm');
+    var warning = $('.warning');
+    var warning_title = $('.warning_title');
+    var warning_content = $('.warning_content');
+    function changeImg() {
+        var arrays = new Array(
+            '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+            'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z'
+        );
+        code = ''; //重新初始化验证码
+        for (var i = 0; i < 4; i++) {
+            var r = parseInt(Math.random() * arrays.length);
+            code += arrays[r];
+        }
+        s.html(code);
+    }
+
+    function check() {
+        if (user.val() === 'admin' && pwd.val() === 'admin') {
+                window.location.href = '/homeAdmin/';
+        }else if (!(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(user.val()))) {
+            warning_title.text('邮箱格式错误');
+            warning_content.text('请输入正确的注册邮箱！');
+            user.val('');
+            warning.show();
+            setTimeout(function() { warning.hide() }, 3000);
+        } else if (!(/^[0-9a-zA-Z\_]{8}$/.test(pwd.val()))) {
+            warning_title.text('密码格式错误');
+            warning_content.text('请输入密码或检查密码格式,密码应为八位！');
+            pwd.val('');
+            warning.show();
+            setTimeout(function() { warning.hide() }, 3000);
+        } else if (!(/^[0-9a-zA-Z]{4}$/.test(yzm.val()) && yzm.val().toUpperCase() === code.toUpperCase())) {
+            warning_title.text('验证码错误');
+            warning_content.text('验证码错误,请重试！')
+            warning.show();
+            setTimeout(function() { warning.hide() }, 3000);
+            changeImg();
+            yzm.val('');
+        } else {
+            $.ajax({
+                url: '/login/',
+                type: 'post',
+                data: { user: user.val(), pwd: pwd.val() },
+                dataType: 'JSON',
+                success: function(data) {
+                    if (data.status === 0) {
+                        warning_title.text('用户不存在');
+                        warning_content.text('当前用户不存在,请检查邮箱！');
+                        user.val('');
+                        warning.show();
+                        setTimeout(function() { warning.hide() }, 3000);
+                    } else if (data.status === 1) {
+                        warning_title.text('密码错误');
+                        warning_content.text('输入密码不正确,请检查密码是否有误！');
+                        pwd.val('');
+                        warning.show();
+                        setTimeout(function() { warning.hide() }, 3000);
+                    } else if (data.status === 2) {
+                        // 将用户ID存储到sessionStorage中
+                        sessionStorage.setItem('userId', data.userId);
+                        setTimeout(function() {
+                            window.location.href = data.redirect_url;
+                        }, 1000);
+                    }
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>
+

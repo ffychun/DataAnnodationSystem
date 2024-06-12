@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据标注众包服务平台 - 支付</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/static/css/project.css">
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <style>
+        /* 保持页面背景 */
+        body {
+            background-color: #f2f2f2;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        /* 使按钮样式与之前一致 */
+        button {
+            background-color: #337ab7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #286090;
+        }
+    </style>
+    <style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .container.form-container {
+        /* 如果需要容器内容居中，可以添加以下样式 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        max-width: 600px; /* 设置容器的最大宽度 */
+        width: 100%; /* 设置容器宽度为100%，以适应父级元素 */
+        padding: 20px; /* 可根据需要调整容器的内边距 */
+    }
+
+    .container.form-container p {
+        text-align: center; /* 文本居中 */
+        margin: 10px 0; /* 设置段落上下边距 */
+    }
+
+    .container.form-container form {
+        display: inline-block; /* 让表单内元素水平排列 */
+        text-align: center; /* 让表单内内容居中 */
+    }
+</style>
+</head>
+<body>
+    <!-- 任务发布表单容器 -->
+    <div class="container form-container" id="payContainer">
+        <form action="{% url 'confirm_payment' order.order_id %}" method="post" enctype="multipart/form-data" id="payForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <p>订单号：{{ order.order_id }}</p>
+            </div>
+            <div class="form-group">
+                <p>订单金额：{{ order.total_price }}</p>
+            </div>
+            <div class="form-group">
+                <p>订单标注者：{{ order.labeler.name }}</p>
+            </div>
+            <div class="form-group">
+                <p>所属任务：{{ order.task.taskTitle }}</p>
+            </div>
+            {% if order.pay_method == 0 %}
+            <div class="form-group">
+                <p>选择支付方式：</p>
+                <input type="radio" name="payment_method" value="2"> 微信支付
+                <input type="radio" name="payment_method" value="1"> 支付宝支付
+            </div>
+            <div class="form-group">
+                <button type="submit" value="确认支付">确认支付</button>
+            </div>
+            {% else %}
+            <p>已支付</p>
+            {% endif %}
+
+        </form>
+    </div>
+</body>
+</html>
